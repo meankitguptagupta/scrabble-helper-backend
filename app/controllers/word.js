@@ -8,8 +8,9 @@ module.exports.controller = (server) => {
      * @method POST
      */
     server.post ('/words', (req, res) => {
-        for (let i = 0; i < (req.body).length; i++) {
-            (new Word ((req.body)[i])).save();
+        let words = req.body;
+        for (let i = 0; i < words.length; i++) {
+            (new Word (words[i])).save();
         }
         return res.send (200, {status: true, data: 'words successfully saved'});
     });

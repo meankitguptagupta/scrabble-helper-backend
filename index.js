@@ -5,6 +5,8 @@ const restify = require ('restify'),
     port = process.env.port || 3000,
     server = restify.createServer ();
 
+server.pre (restify.plugins.bodyParser());
+
 fs.readdirSync (path.join (__dirname, 'app', 'controllers')).forEach ((file) => {
     require (path.join (__dirname, 'app', 'controllers', file)).controller (server);
 })
