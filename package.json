@@ -1,0 +1,32 @@
+{
+  "name": "scrabble-helper-backend",
+  "version": "1.0.0",
+  "description": "this is scrabble helper developed in MEAN",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meankitguptagupta/scrabble-helper-backend.git"
+  },
+  "keywords": [
+    "scrabble",
+    "scrabble-cheater",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Ankit Gupta <meankitgupta.gupta@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meankitguptagupta/scrabble-helper-backend/issues"
+  },
+  "homepage": "https://github.com/meankitguptagupta/scrabble-helper-backend#readme",
+  "dependencies": {
+    "mongoose": "^5.3.1",
+    "restify": "^7.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
+  }
+}
