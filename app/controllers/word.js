@@ -33,24 +33,11 @@ module.exports.controller = (server) => {
         let optional = query.optional || null;
         let restrict = query.restrict ? (query.restrict).split(',') : null;
 
-        // design mongoose query on basis or user requirement
+        Word.find({ word: {$regex : "^" + start}}).select('word description -_id').exec((err, data) => {
+            if (err)
+                return res.send (500, {status: false, errors: err});
 
-
-        // check for the start condition
-        if (start) {
-            // impose start words
-            // word is index in mongoDB document named words
-            condition = {word : {$regex: "^" + start}};
-        }
-
-        // check for the end condition
-        if (end) {
-            
-        }
-
-
-        // Word.find({ word: {$regex : "^" + req.params.username}});
-
-        return res.send (200, {status: true, data: 'words successfully saved'});
+            return res.send (200, {status: true, data: data});
+        });
     });
 }
