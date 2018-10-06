@@ -22,11 +22,11 @@ module.exports.controller = (server) => {
      * @param string end
      * @param string sets (seperated by comma)
      * @param char restrict (seperated by comma)
+     * 
+     * @return {"status":true,"data":[{"word":"apiked"}]}
      */
     server.get ('/words', (req, res) => {
-        let query = req.query;
-
-        Word.find({ word: {$regex : designQueryRegexp (query)}}).select('word description -_id').exec((err, data) => {
+        Word.find({ word: {$regex : designQueryRegexp (req.query)}}).select('word -_id').exec((err, data) => {
             if (err)
                 return res.send (500, {status: false, errors: err});
 
@@ -61,5 +61,5 @@ function designQueryRegexp (query) {
     }
     
     // check for regexpCond
-    return "^"+start + (regexpCond.trim() ? regexpCond : '.*') + ".*" + end + "$";
+    return (start ? ("^" + start + "+") : '') + (regexpCond.trim() ? regexpCond : '.*') + (end ? (".*" + end + "$") : '');
 }
