@@ -21,19 +21,36 @@ module.exports.controller = (server) => {
      * @param string start
      * @param string end
      * @param string sets (seperated by comma)
-     * @param number optional
      * @param char restrict (seperated by comma)
      */
     server.get ('/words', (req, res) => {
         let query = req.query;
-        let condition = {};
-        let start = query.start || null;
-        let end = query.end || null;
-        let sets = query.sets ? (query.sets).split(',') : null;
-        let optional = query.optional || null;
-        let restrict = query.restrict ? (query.restrict).split(',') : null;
+        let start = query.start || '';
+        let end = query.end || '';
+        let sets = query.sets ? (query.sets).split(',') : '';
+        let restrict = query.restrict ? (query.restrict).split('') : '';
 
-        Word.find({ word: {$regex : "^" + start}}).select('word description -_id').exec((err, data) => {
+        let condition = "^"+start;
+
+        let regexpCond = '';
+        // append stes and optional to design regexp
+        for (let i in sets) {
+            // append sets in regular expression condition
+            regexpCond += "(?=.*" + sets[i] + ")";
+        }
+
+        // append optional letter search in condition
+        for (let i in restrict) {
+            // append sets in regular expression condition
+            regexpCond += "(?=.*" + restrict[i] + ")";
+        }
+        
+        // check for regexpCond
+        condition += (regexpCond.trim() ? regexpCond : '.*') + ".*" + end + "$";
+
+        console.log (condition);
+
+        Word.find({ word: {$regex : condition}}).select('word description -_id').exec((err, data) => {
             if (err)
                 return res.send (500, {status: false, errors: err});
 
