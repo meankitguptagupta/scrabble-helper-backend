@@ -25,36 +25,41 @@ module.exports.controller = (server) => {
      */
     server.get ('/words', (req, res) => {
         let query = req.query;
-        let start = query.start || '';
-        let end = query.end || '';
-        let sets = query.sets ? (query.sets).split(',') : '';
-        let restrict = query.restrict ? (query.restrict).split('') : '';
 
-        let condition = "^"+start;
-
-        let regexpCond = '';
-        // append stes and optional to design regexp
-        for (let i in sets) {
-            // append sets in regular expression condition
-            regexpCond += "(?=.*" + sets[i] + ")";
-        }
-
-        // append optional letter search in condition
-        for (let i in restrict) {
-            // append sets in regular expression condition
-            regexpCond += "(?=.*" + restrict[i] + ")";
-        }
-        
-        // check for regexpCond
-        condition += (regexpCond.trim() ? regexpCond : '.*') + ".*" + end + "$";
-
-        console.log (condition);
-
-        Word.find({ word: {$regex : condition}}).select('word description -_id').exec((err, data) => {
+        Word.find({ word: {$regex : designQueryRegexp (query)}}).select('word description -_id').exec((err, data) => {
             if (err)
                 return res.send (500, {status: false, errors: err});
 
             return res.send (200, {status: true, data: data});
         });
     });
+}
+
+/**
+ * Method to prepere query string or query regexp of search keywords
+ * @param Object query 
+ * 
+ * @return string
+ */
+function designQueryRegexp (query) {
+    let start = query.start || '';
+    let end = query.end || '';
+    let sets = query.sets ? (query.sets).split(',') : '';
+    let restrict = query.restrict ? (query.restrict).split('') : '';
+
+    let regexpCond = '';
+    // append stes and optional to design regexp
+    for (let i in sets) {
+        // append sets in regular expression condition
+        regexpCond += "(?=.*" + sets[i] + ")";
+    }
+
+    // append optional letter search in condition
+    for (let i in restrict) {
+        // append sets in regular expression condition
+        regexpCond += "(?=.*" + restrict[i] + ")";
+    }
+    
+    // check for regexpCond
+    return "^"+start + (regexpCond.trim() ? regexpCond : '.*') + ".*" + end + "$";
 }
